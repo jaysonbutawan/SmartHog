@@ -28,7 +28,9 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage('https://images.unsplash.com/photo-1604848698030-c434ba0861db?q=80&w=1000'),
+                image: NetworkImage(
+                  'https://images.unsplash.com/photo-1604848698030-c434ba0861db?q=80&w=1000',
+                ),
                 fit: BoxFit.cover,
               ),
             ),
@@ -39,13 +41,19 @@ class _LoginPageState extends State<LoginPage> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24.0,
+                  vertical: 16.0,
+                ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(40.0),
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24.0,
+                        vertical: 40.0,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.35),
                         borderRadius: BorderRadius.circular(40.0),
@@ -64,31 +72,48 @@ class _LoginPageState extends State<LoginPage> {
                               // App Branding Header
                               const Text(
                                 'Welcome Back',
-                                style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black),
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               const Text(
                                 'SMART HOG',
-                                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Colors.black),
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.black,
+                                ),
                               ),
                               const SizedBox(height: 16),
-                              
+
                               // Logo Assets Placeholder
                               _buildLogoPlaceholder(),
                               const SizedBox(height: 16),
-                              
+
                               const Text(
                                 'AUTOMATED FEEDING & MONITORING',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
                               ),
                               const SizedBox(height: 32),
 
                               // Username Field
                               TextField(
                                 controller: _controller.usernameController,
-                                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-                                decoration: _buildInputDecoration(hint: 'Username'),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                decoration: _buildInputDecoration(
+                                  hint: 'Username',
+                                ),
                               ),
                               const SizedBox(height: 20),
 
@@ -96,15 +121,21 @@ class _LoginPageState extends State<LoginPage> {
                               TextField(
                                 controller: _controller.passwordController,
                                 obscureText: _controller.obscurePassword,
-                                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
                                 decoration: _buildInputDecoration(
                                   hint: 'Password',
                                   suffix: IconButton(
                                     icon: Icon(
-                                      _controller.obscurePassword ? Icons.visibility : Icons.visibility_off,
+                                      _controller.obscurePassword
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
                                       color: const Color(0xFF2EAF65),
                                     ),
-                                    onPressed: _controller.togglePasswordVisibility,
+                                    onPressed:
+                                        _controller.togglePasswordVisibility,
                                   ),
                                 ),
                               ),
@@ -112,7 +143,8 @@ class _LoginPageState extends State<LoginPage> {
 
                               // Keep Account / Reset Form controls
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Row(
                                     children: [
@@ -122,16 +154,25 @@ class _LoginPageState extends State<LoginPage> {
                                         child: Checkbox(
                                           value: _controller.rememberMe,
                                           activeColor: const Color(0xFF2EAF65),
-                                          side: const BorderSide(color: Color(0xFF2EAF65), width: 2),
+                                          side: const BorderSide(
+                                            color: Color(0xFF2EAF65),
+                                            width: 2,
+                                          ),
                                           onChanged: (bool? value) {
-                                            _controller.setRememberMe(value ?? false);
+                                            _controller.setRememberMe(
+                                              value ?? false,
+                                            );
                                           },
                                         ),
                                       ),
                                       const SizedBox(width: 8),
                                       const Text(
                                         'Remember this device',
-                                        style: TextStyle(color: Colors.black, fontSize: 12, fontWeight: FontWeight.w600),
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -140,8 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                                     child: const Text(
                                       'Forgot Password?',
                                       style: TextStyle(
-                                        color: Colors.black, 
-                                        fontSize: 12, 
+                                        color: Colors.black,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                         decoration: TextDecoration.underline,
                                       ),
@@ -156,13 +197,23 @@ class _LoginPageState extends State<LoginPage> {
                                 width: double.infinity,
                                 height: 56,
                                 child: ElevatedButton(
-                                  onPressed: _controller.handleLogin,
+                                  onPressed: () {
+                                    _controller.handleLogin(context);
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF12A153),
                                     foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28.0)),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(28.0),
+                                    ),
                                   ),
-                                  child: const Text('Login', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                                  child: const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
@@ -181,12 +232,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // Visual component refactors for clean scannability
-  InputDecoration _buildInputDecoration({required String hint, Widget? suffix}) {
+  InputDecoration _buildInputDecoration({
+    required String hint,
+    Widget? suffix,
+  }) {
     return InputDecoration(
       hintText: hint,
       hintStyle: const TextStyle(color: Colors.black54, fontSize: 18),
       filled: true,
-      fillColor: Colors.white.withOpacity(0.1),
+      fillColor: Colors.white.withAlpha(26), // 0.1 opacity
       contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(20),
@@ -196,7 +250,9 @@ class _LoginPageState extends State<LoginPage> {
         borderRadius: BorderRadius.circular(20),
         borderSide: const BorderSide(color: Color(0xFF2EAF65), width: 2),
       ),
-      suffixIcon: suffix != null ? Padding(padding: const EdgeInsets.only(right: 12.0), child: suffix) : null,
+      suffixIcon: suffix != null
+          ? Padding(padding: const EdgeInsets.only(right: 12.0), child: suffix)
+          : null,
     );
   }
 
@@ -206,7 +262,14 @@ class _LoginPageState extends State<LoginPage> {
       children: [
         Column(
           children: [
-            const Text('SMART HOG', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.purple)),
+            const Text(
+              'SMART HOG',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: Colors.purple,
+              ),
+            ),
             const SizedBox(height: 2),
             Icon(Icons.wb_sunny_outlined, color: Colors.orange[700], size: 16),
             Icon(Icons.gite_outlined, color: Colors.brown[700], size: 24),
