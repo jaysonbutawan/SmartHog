@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smarthog/modules/feeding.schedule/feeding.schedule_page.dart';
 import 'package:smarthog/modules/feeding.history/feeding_history_page.dart';
+import 'package:smarthog/modules/farm.alert/farm_alerts_page.dart';
 
 class BottomNavPage extends StatefulWidget {
   const BottomNavPage({super.key});
@@ -16,7 +17,7 @@ class _BottomNavPageState extends State<BottomNavPage> {
     Center(child: Text("Home Page")),
     FeedingSchedulePage(),
     FeedingHistoryPage(), // Placeholder for Feeding History
-    Center(child: Text("Alerts Page")),
+   FarmAlertsPage(),
   ];
 
   @override

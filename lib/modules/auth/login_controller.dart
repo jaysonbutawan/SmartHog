@@ -38,28 +38,28 @@ class LoginController extends ChangeNotifier {
     final email = usernameController.text.trim();
     final password = passwordController.text;
 
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Email and password are required'),
-        ),
-      );
-      return;
-    }
+    // if (email.isEmpty || password.isEmpty) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('Email and password are required'),
+    //     ),
+    //   );
+    //   return;
+    // }
 
-    try {
-      _isLoading = true;
-      notifyListeners();
+    // try {
+    //   _isLoading = true;
+    //   notifyListeners();
 
-      final response = await loginService.login(
-        email,
-        password,
-      );
+    //   final response = await loginService.login(
+    //     email,
+    //     password,
+    //   );
 
-      _isLoading = false;
-      notifyListeners();
+    //   _isLoading = false;
+    //   notifyListeners();
 
-      if (response.success == true) {
+    //   if (response.success == true) {
 
         Navigator.pushReplacement(
           context,
@@ -68,29 +68,29 @@ class LoginController extends ChangeNotifier {
           ),
         );
 
-      } else {
+    //   } else {
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              response.message,
-            ),
-          ),
-        );
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text(
+    //           response.message,
+    //         ),
+    //       ),
+    //     );
 
-      }
+    //   }
 
-    } catch (e) {
+    // } catch (e) {
 
-      _isLoading = false;
-      notifyListeners();
+    //   _isLoading = false;
+    //   notifyListeners();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-        ),
-      );
-    }
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text(e.toString()),
+    //     ),
+    //   );
+    // }
   }
 
   @override
