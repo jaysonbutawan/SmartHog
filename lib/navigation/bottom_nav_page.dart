@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smarthog/modules/feeding.schedule/feeding.schedule_page.dart';
+import 'package:smarthog/modules/feeding.history/feeding_history_page.dart';
 
 class BottomNavPage extends StatefulWidget {
   const BottomNavPage({super.key});
@@ -10,17 +11,11 @@ class BottomNavPage extends StatefulWidget {
 
 class _BottomNavPageState extends State<BottomNavPage> {
   int _currentIndex = 0;
-  //  final List<Widget> pages = [
-  //   HomeScreen(),
-  //   SearchScreen(),
-  //   NotificationsScreen(),
-  //   ProfileScreen(),
-  // ];
 
   final List<Widget> _pages = const [
     Center(child: Text("Home Page")),
     FeedingSchedulePage(),
-    Center(child: Text("Feeding History Page")),
+    FeedingHistoryPage(), // Placeholder for Feeding History
     Center(child: Text("Alerts Page")),
   ];
 
