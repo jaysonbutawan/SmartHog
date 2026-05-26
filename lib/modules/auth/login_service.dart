@@ -6,13 +6,13 @@ class LoginService {
 
   LoginService(this._dio);
 
-  Future<LoginResponse> requestOtp(String email) async {
+  Future<LoginResponse> login(String email, String password) async {
     try {
       final res = await _dio.post(
-        '/api/theobrotect/auth/request-otp',
+        '/api/v1/auth/login',
         data: {
           'email': email,
-          'password': 'password',
+          'password': password,
         },
         options: Options(
           headers: const {

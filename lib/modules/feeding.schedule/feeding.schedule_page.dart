@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:smarthog/modules/feeding.schedule/widgets/new_schedule_modal.dart';
 import 'widgets/section_card.dart';
 import 'widgets/day_button.dart';
-// Controller import
 import 'feeding_schedule_controller.dart';
 
 class FeedingSchedulePage extends StatelessWidget {
@@ -11,7 +10,6 @@ class FeedingSchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Inject and instantiate the state controller
     final FeedingScheduleController controller = Get.put(
       FeedingScheduleController(),
     );

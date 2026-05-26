@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'login_controller.dart'; // Import your controller
+import 'login_controller.dart';
+import 'login_service.dart';
+import '../../core/dio_client.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,12 +12,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Instance of our controller
-  final LoginController _controller = LoginController();
-
+  final LoginController _controller = LoginController(
+    loginService: LoginService(DioClient.dio),
+  );
   @override
   void dispose() {
-    _controller.dispose(); // Cleans up text fields automatically
+    _controller.dispose(); 
     super.dispose();
   }
 
