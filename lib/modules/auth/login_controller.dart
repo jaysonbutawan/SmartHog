@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smarthog/navigation/bottom_nav_page.dart';
 import 'package:smarthog/modules/auth/login_service.dart';
-
-
 class LoginController extends ChangeNotifier {
   final LoginService loginService;
 
@@ -75,7 +73,7 @@ class LoginController extends ChangeNotifier {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              response.message ?? 'Login failed',
+              response.message,
             ),
           ),
         );
