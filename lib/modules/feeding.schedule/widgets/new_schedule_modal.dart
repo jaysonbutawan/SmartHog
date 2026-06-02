@@ -10,18 +10,20 @@ import 'pen_button.dart';
 import '../controllers/schedule_modal_controller.dart';
 import '../farm/farm_summary_service.dart';
 import 'package:dio/dio.dart';
+import '../../../core/dio_client.dart';
 
 class NewScheduleModal extends StatelessWidget {
   const NewScheduleModal({super.key});
 
- static void show(BuildContext context) {
-    // 1. Inject Dio if your app hasn't initialized it globally yet
+
+static void show(BuildContext context) {
+    // 1. Inject your custom configured DioClient instance instead of a raw blank one
     if (!Get.isRegistered<Dio>()) {
-      Get.put(Dio()); 
-      // Note: If you have a custom baseUrl, use: Get.put(Dio(BaseOptions(baseUrl: 'YOUR_URL')));
+      // 📝 FIX: Put your static singleton into the Get dependency manager
+      Get.put<Dio>(DioClient.dio); 
     }
 
-    // 2. Inject FarmSummaryService using that Dio instance
+    // 2. Inject FarmSummaryService using that pre-configured Dio instance
     if (!Get.isRegistered<FarmSummaryService>()) {
       Get.put(FarmSummaryService(Get.find<Dio>()));
     }
