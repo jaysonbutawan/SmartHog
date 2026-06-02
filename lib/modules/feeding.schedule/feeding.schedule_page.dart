@@ -64,22 +64,18 @@ class FeedingSchedulePage extends StatelessWidget {
                           letterSpacing: 0.5,
                         ),
                       ),
-                      IconButton(
-                        visualDensity: VisualDensity.compact,
-                        icon: const Icon(
-                          Icons.add,
-                          color: Color(0xFF13B14F),
-                          size: 28,
-                        ),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => const NewScheduleModal(),
-                          );
-                        },
-                      ),
+                  IconButton(
+            visualDensity: VisualDensity.compact,
+            icon: const Icon(
+              Icons.add,
+              color: Color(0xFF13B14F),
+              size: 28,
+            ),
+            onPressed: () {
+              // ✅ CORRECT: This executes the dependency injection setup before opening the modal
+              NewScheduleModal.show(context); 
+            },
+          ),
                     ],
                   ),
                   const SizedBox(height: 10),

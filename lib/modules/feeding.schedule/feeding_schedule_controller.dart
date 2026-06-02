@@ -8,7 +8,6 @@ class FeedingScheduleController extends GetxController {
   final RxList<String> selectedDays = <String>['Mon', 'Tue', 'Wed', 'Thu'].obs;
   final List<String> allDays = const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-  // Actions / State Mutations
   void changePen(String penName) {
     selectedPen.value = penName;
   }

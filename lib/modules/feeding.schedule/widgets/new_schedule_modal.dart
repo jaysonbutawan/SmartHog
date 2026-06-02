@@ -7,21 +7,47 @@ import 'add_time_dialog.dart';
 import 'section_card.dart';
 import 'feed_type_card.dart';
 import 'pen_button.dart';
+import '../controllers/schedule_modal_controller.dart';
+import '../farm/farm_summary_service.dart';
+import 'package:dio/dio.dart';
+
 class NewScheduleModal extends StatelessWidget {
   const NewScheduleModal({super.key});
 
-  static void show(BuildContext context) {
+ static void show(BuildContext context) {
+    // 1. Inject Dio if your app hasn't initialized it globally yet
+    if (!Get.isRegistered<Dio>()) {
+      Get.put(Dio()); 
+      // Note: If you have a custom baseUrl, use: Get.put(Dio(BaseOptions(baseUrl: 'YOUR_URL')));
+    }
+
+    // 2. Inject FarmSummaryService using that Dio instance
+    if (!Get.isRegistered<FarmSummaryService>()) {
+      Get.put(FarmSummaryService(Get.find<Dio>()));
+    }
+
+    // 3. Inject ScheduleModalController using the service
+    if (!Get.isRegistered<ScheduleModalController>()) {
+      Get.put(
+        ScheduleModalController(Get.find<FarmSummaryService>()),
+      );
+    }
+
+    // 4. Open the modal
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => const NewScheduleModal(),
-    );
+    ).then((_) {
+      // Deletes the controller safely ONLY after the modal is dismissed
+      Get.delete<ScheduleModalController>();
+    });
   }
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<FeedingScheduleController>();
+    final modalController = Get.find<ScheduleModalController>();
     final allDays = const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     return Container(
@@ -56,13 +82,63 @@ class NewScheduleModal extends StatelessWidget {
                 fontWeight: FontWeight.w400,
               ),
             ),
-              // CARD 1: Select Pen
             SectionCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '1. SELECT PEN',
+                    '1. SELECT FARM',
+                    style: TextStyle(
+                      color: Color(0xFF0C4626),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 12,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  Obx(() {
+  // 1. If it's fetching data, show loading text
+  if (modalController.isLoading.value) {
+    return const Text(
+      "Loading farms...",
+      style: TextStyle(color: Colors.grey, fontSize: 14),
+    );
+  }
+
+  // 2. If an error happened OR no farms returned, safely display fallback text
+  if (modalController.isError.value || modalController.farms.isEmpty) {
+    return const Text(
+      "Farms not available",
+      style: TextStyle(
+        color: Colors.redAccent, 
+        fontWeight: FontWeight.w500,
+        fontSize: 14,
+      ),
+    );
+  }
+
+  // 3. Otherwise, build out the normal list safely
+  return Wrap(
+    spacing: 12,
+    children: modalController.farms.map((farm) {
+      return PenButton(
+        label: farm.location,
+        isSelected: modalController.selectedFarmId.value == farm.id,
+        onTap: () => modalController.selectFarm(farm.id),
+      );
+    }).toList(),
+  );
+}),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            SectionCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '2. SELECT PEN',
                     style: TextStyle(
                       color: Color(0xFF0C4626),
                       fontWeight: FontWeight.w800,
@@ -99,7 +175,7 @@ class NewScheduleModal extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '2. SELECT FEED TYPE',
+                    '3. SELECT FEED TYPE',
                     style: TextStyle(
                       color: Color(0xFF0C4626),
                       fontWeight: FontWeight.w800,
@@ -148,22 +224,30 @@ class NewScheduleModal extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-          OutlinedButton.icon(
-      onPressed: () {
-        // Trigger the exact input design frame
-        AddTimeDialog.show(context, (hour, minute, period) {
-          controller.addTimeSlot(hour, minute, period);
-        });
-      },
-      icon: const Icon(Icons.add, size: 18),
-      label: const Text('Add Time'),
-      style: OutlinedButton.styleFrom(
-        foregroundColor: const Color(0xFF13B14F),
-        side: const BorderSide(color: Color(0xFF13B14F), width: 1.2),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      ),
-    ),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    // Trigger the exact input design frame
+                    AddTimeDialog.show(context, (hour, minute, period) {
+                      controller.addTimeSlot(hour, minute, period);
+                    });
+                  },
+                  icon: const Icon(Icons.add, size: 18),
+                  label: const Text('Add Time'),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFF13B14F),
+                    side: const BorderSide(
+                      color: Color(0xFF13B14F),
+                      width: 1.2,
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                ),
                 const Spacer(),
               ],
             ),

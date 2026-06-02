@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smarthog/navigation/bottom_nav_page.dart';
 import 'package:smarthog/modules/auth/login_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 class LoginController extends ChangeNotifier {
   final LoginService loginService;
 
@@ -9,11 +11,8 @@ class LoginController extends ChangeNotifier {
   });
 
   // Input fields
-  final TextEditingController usernameController =
-      TextEditingController();
-
-  final TextEditingController passwordController =
-      TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   // Observable states
   bool _obscurePassword = true;
@@ -35,63 +34,73 @@ class LoginController extends ChangeNotifier {
   }
 
   Future<void> handleLogin(BuildContext context) async {
-    final email = usernameController.text.trim();
-    final password = passwordController.text;
+  final email = usernameController.text.trim();
+  final password = passwordController.text;
 
-    // if (email.isEmpty || password.isEmpty) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(
-    //       content: Text('Email and password are required'),
-    //     ),
-    //   );
-    //   return;
-    // }
+  if (email.isEmpty || password.isEmpty) {
+    debugPrint('❌ LOGIN FAILED: Email or password is empty');
 
-    // try {
-    //   _isLoading = true;
-    //   notifyListeners();
-
-    //   final response = await loginService.login(
-    //     email,
-    //     password,
-    //   );
-
-    //   _isLoading = false;
-    //   notifyListeners();
-
-    //   if (response.success == true) {
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const BottomNavPage(),
-          ),
-        );
-
-    //   } else {
-
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text(
-    //           response.message,
-    //         ),
-    //       ),
-    //     );
-
-    //   }
-
-    // } catch (e) {
-
-    //   _isLoading = false;
-    //   notifyListeners();
-
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text(e.toString()),
-    //     ),
-    //   );
-    // }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Email and password are required'),
+      ),
+    );
+    return;
   }
+
+  try {
+    _isLoading = true;
+    notifyListeners();
+
+    debugPrint('🔐 LOGIN ATTEMPT: $email');
+
+    final response = await loginService.login(email, password);
+
+    _isLoading = false;
+    notifyListeners();
+
+    if (!context.mounted) return;
+
+    if (response.success == true) {
+      debugPrint('✅ LOGIN SUCCESS: $email');
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('auth_token', response.data.token);
+
+      debugPrint('💾 TOKEN SAVED SUCCESSFULLY');
+
+      if (!context.mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const BottomNavPage(),
+        ),
+      );
+    } else {
+      debugPrint('❌ LOGIN FAILED: ${response.message}');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message),
+        ),
+      );
+    }
+  } catch (e) {
+    _isLoading = false;
+    notifyListeners();
+
+    debugPrint('⚠️ LOGIN ERROR: $e');
+
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(e.toString()),
+      ),
+    );
+  }
+}
 
   @override
   void dispose() {
